@@ -70,7 +70,7 @@ setup(
         'cryptography==3.4.7',
         'dnspython==1.16.0',
         'eventlet==0.31.1',
-        'Flask==2.0.1',
+        'Flask==2.3.2',
         'Flask-SocketIO==5.1.1',
         'gevent==21.1.2',
         'greenlet==1.1.0',
