@@ -28,13 +28,13 @@ class IndyConnector(AbstractConnector):
     def execSyncFunction(self, address, funcName, args):
         """Execute a synchronous function held by a smart contract"""
         print(f"##{self.moduleName}.execSyncFunction()")
-        
+
         command = args['method']['command']
         if command== 'indy_ledger_submit_request':
             print(f"##execSyncFunction : args['args']['args'] : {args['args']['args']}")
             # return self.load_schema_or_credential_definition(args['args']['args'])
 
-        if command== 'get_schema' or command== 'get_cred_def':
+        if command in ['get_schema', 'get_cred_def']:
             print(f"##execSyncFunction get_schema_or_cred_def: args['args']['args'] : {args['args']['args']}")
             resTuple = self.run_coroutine(self.get_schema_or_cred_def, command, args['args']['args'])
             # resList = json.dumps(resTuple)
@@ -42,7 +42,7 @@ class IndyConnector(AbstractConnector):
             # resJson = {"data":str(resObj)}
             print(f"##execSyncFunction resObj : {resJson}")
             return resJson
-            
+
         print(f"##{self.moduleName} unknown command : {command}")
         return "unknown command."
     
@@ -79,8 +79,11 @@ class IndyConnector(AbstractConnector):
     def run_coroutine_ensure_previous_request_applied(self, pool_handle, checker_request, checker, loop=None):
         if loop is None:
             loop = asyncio.get_event_loop()
-        results = loop.run_until_complete(self.ensure_previous_request_applied(pool_handle, checker_request, checker))
-        return results
+        return loop.run_until_complete(
+            self.ensure_previous_request_applied(
+                pool_handle, checker_request, checker
+            )
+        )
 
     async def get_schema_or_cred_def(self, command, args):
         print(f"##{self.moduleName}.get_schema_or_cred_def()")
@@ -126,5 +129,4 @@ class IndyConnector(AbstractConnector):
     def run_coroutine(self, coroutine, command, args, loop=None):
         if loop is None:
             loop = asyncio.get_event_loop()
-        result = loop.run_until_complete(coroutine(command, args))
-        return result
+        return loop.run_until_complete(coroutine(command, args))

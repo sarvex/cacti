@@ -74,12 +74,11 @@ class IrohaConnector(AbstractConnector):
     def run_coroutine(self, coroutine, command, args, loop=None):
         if loop is None:
             loop = asyncio.get_event_loop()
-        result = loop.run_until_complete(coroutine(command, args))
-        return result
+        return loop.run_until_complete(coroutine(command, args))
 
     def get_block(self, blockNum):
         print(f'##get_block block num is : {blockNum}')
-        
+
         # create Query
         get_block_query = self.iroha.query(
             'GetBlock',
@@ -87,12 +86,10 @@ class IrohaConnector(AbstractConnector):
         )
         # sign Query
         IrohaCrypto.sign_query(get_block_query, self.admin_priv_key)
-        # send Query
-        response = self.net.send_query(get_block_query)
-        return response
+        return self.net.send_query(get_block_query)
 
     def monitoring_routine(self, isInit = False):
-        print(f'##called monitoring_routine()')
+        print('##called monitoring_routine()')
         while(True):
             blockData = self.get_block(self.latestNumOfBlocks + 1)
             if(blockData.error_response.error_code == 0):

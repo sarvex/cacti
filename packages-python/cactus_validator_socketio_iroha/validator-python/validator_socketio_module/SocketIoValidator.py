@@ -89,11 +89,8 @@ class SocketIoValidator:
         print(f"##build_res_obj result: {result}")
 
         signed_results = self.sign(result)
-        responseData = {}
-        res_obj = {}
-        res_obj["status"] = status_code
-        res_obj["data"] = signed_results
-        responseData["resObj"] = res_obj
+        res_obj = {"status": status_code, "data": signed_results}
+        responseData = {"resObj": res_obj}
         if req_id is not None:
             responseData["id"] = req_id
         return responseData
@@ -108,12 +105,12 @@ class SocketIoValidator:
     #     return self.session_dict[sessionid].cb(answer)
 
     def getValidatorInstance(self):
-        print(f'##called getValidatorInstance()')
+        print('##called getValidatorInstance()')
         return IrohaConnector(self.socketio, request.sid, self.iroha_dic, self)
 
     def sign(self, data):
         """ sign data """
-        print(f'##called sign()')
+        print('##called sign()')
         with open(self.privateKeyFile, 'br') as fh:
             private_key = fh.read()
 

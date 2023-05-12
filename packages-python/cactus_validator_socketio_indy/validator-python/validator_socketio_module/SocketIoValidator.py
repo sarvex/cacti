@@ -85,11 +85,8 @@ class SocketIoValidator:
         print(f"##build_res_obj result: {result}")
 
         signed_results = self.sign(result)
-        responseData = {}
-        res_obj = {}
-        res_obj["status"] = status_code
-        res_obj["data"] = signed_results
-        responseData["resObj"] = res_obj
+        res_obj = {"status": status_code, "data": signed_results}
+        responseData = {"resObj": res_obj}
         if req_id is not None:
             responseData["id"] = req_id
         return responseData
@@ -104,12 +101,12 @@ class SocketIoValidator:
         return self.session_dict[sessionid].cb(answer)
 
     def getValidatorInstance(self):
-        print(f'##called getValidatorInstance()')
+        print('##called getValidatorInstance()')
         return IndyConnector(self.socketio, request.sid, self.indy_dic)
 
     def sign(self, data):
         """ sign data """
-        print(f'##called sign()')
+        print('##called sign()')
         with open(self.privateKeyFile, 'br') as fh:
             private_key = fh.read()
 
@@ -124,7 +121,7 @@ class SocketIoValidator:
     # for INDY
     def init_indy(self):
         """ Initialization process for INDY """
-        print(f'##called init_indy()')
+        print('##called init_indy()')
 
         self.run_coroutine(self.init_indy_pool)
         self.run_coroutine(self.open_pool)
@@ -135,7 +132,7 @@ class SocketIoValidator:
         pool_ = {
             'name': 'pool1'
         }
-        print("Open Pool Ledger: {}".format(pool_['name']))
+        print(f"Open Pool Ledger: {pool_['name']}")
         pool_['genesis_txn_path'] = get_pool_genesis_txn_path(pool_['name'])
         pool_['config'] = json.dumps({"genesis_txn": str(pool_['genesis_txn_path'])})
 
@@ -146,8 +143,7 @@ class SocketIoValidator:
             await pool.create_pool_ledger_config(pool_['name'], pool_['config'])
             print('##init_indy_pool create pool ledger config completed')
         except IndyError as ex:
-            if ex.error_code == ErrorCode.PoolLedgerConfigAlreadyExistsError:
-                pass
+            pass
 
     # for INDY
     async def open_pool(self):
@@ -158,7 +154,7 @@ class SocketIoValidator:
 
     # for INDY
     def run_coroutine(self, coroutine, loop=None):
-        print(f'##called run_coroutine()')
+        print('##called run_coroutine()')
         if loop is None:
             loop = asyncio.get_event_loop()
         loop.run_until_complete(coroutine())

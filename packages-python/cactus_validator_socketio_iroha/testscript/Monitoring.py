@@ -29,9 +29,7 @@ def get_block(blockNum):
         )
         # sign Query
         IrohaCrypto.sign_query(get_block_query, admin_priv_key)
-        # send Query
-        response = net.send_query(get_block_query)
-        return response
+        return net.send_query(get_block_query)
 
 def get_diff_blocks():
         print("called get_diff_blocks")

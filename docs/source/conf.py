@@ -20,13 +20,15 @@ sys.path.insert(0, os.path.abspath('../../'))
 
 # -- Project information -----------------------------------------------------
 project = 'Hyperledger Cactus'
-copyright = '2020-{}, Hyperledger Cactus'.format(datetime.datetime.now().date().strftime("%Y"))
+copyright = (
+    f'2020-{datetime.datetime.now().date().strftime("%Y")}, Hyperledger Cactus'
+)
 author = 'Hyperledger Cactus'
 
 # The full version, including alpha/beta/rc tags
 with open('../../lerna.json', 'r') as file:
     config = json.load(file)
-release = '{}'.format(config['version'])
+release = f"{config['version']}"
 
 
 # -- General configuration ---------------------------------------------------

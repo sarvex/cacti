@@ -464,13 +464,12 @@ def wallet_credentials(operation, wallet_credentials_str):
 
 
 async def create_wallet(identity):
-    logger.info("\"{}\" -> Create wallet".format(identity['name']))
+    logger.info(f"""\"{identity['name']}\" -> Create wallet""")
     try:
         await wallet.create_wallet(wallet_config("create", identity['wallet_config']),
                                    wallet_credentials("create", identity['wallet_credentials']))
     except IndyError as ex:
-        if ex.error_code == ErrorCode.PoolLedgerConfigAlreadyExistsError:
-            pass
+        pass
     identity['wallet'] = await wallet.open_wallet(wallet_config("open", identity['wallet_config']),
                                                   wallet_credentials("open", identity['wallet_credentials']))
 
@@ -539,17 +538,17 @@ async def prover_get_entities_from_ledger(pool_handle, _did, identifiers, actor,
     cred_defs = {}
     rev_states = {}
     for item in identifiers.values():
-        logger.info("\"{}\" -> Get Schema from Ledger".format(actor))
+        logger.info(f'\"{actor}\" -> Get Schema from Ledger')
         (received_schema_id, received_schema) = await get_schema(pool_handle, _did, item['schema_id'])
         schemas[received_schema_id] = json.loads(received_schema)
 
-        logger.info("\"{}\" -> Get Claim Definition from Ledger".format(actor))
+        logger.info(f'\"{actor}\" -> Get Claim Definition from Ledger')
         (received_cred_def_id, received_cred_def) = await get_cred_def(pool_handle, _did, item['cred_def_id'])
         cred_defs[received_cred_def_id] = json.loads(received_cred_def)
 
         if 'rev_reg_id' in item and item['rev_reg_id'] is not None:
             # Create Revocations States
-            logger.info("\"{}\" -> Get Revocation Registry Definition from Ledger".format(actor))
+            logger.info(f'\"{actor}\" -> Get Revocation Registry Definition from Ledger')
             get_revoc_reg_def_request = await ledger.build_get_revoc_reg_def_request(_did, item['rev_reg_id'])
 
             get_revoc_reg_def_response = \
@@ -557,7 +556,7 @@ async def prover_get_entities_from_ledger(pool_handle, _did, identifiers, actor,
                                                       lambda response: response['result']['data'] is not None)
             (rev_reg_id, revoc_reg_def_json) = await ledger.parse_get_revoc_reg_def_response(get_revoc_reg_def_response)
 
-            logger.info("\"{}\" -> Get Revocation Registry Delta from Ledger".format(actor))
+            logger.info(f'\"{actor}\" -> Get Revocation Registry Delta from Ledger')
             if not timestamp_to: timestamp_to = int(time.time())
             get_revoc_reg_delta_request = \
                 await ledger.build_get_revoc_reg_delta_request(_did, item['rev_reg_id'], timestamp_from, timestamp_to)
@@ -587,17 +586,17 @@ async def verifier_get_entities_from_ledger(pool_handle, _did, identifiers, acto
     rev_reg_defs = {}
     rev_regs = {}
     for item in identifiers:
-        logger.info("\"{}\" -> Get Schema from Ledger".format(actor))
+        logger.info(f'\"{actor}\" -> Get Schema from Ledger')
         (received_schema_id, received_schema) = await get_schema(pool_handle, _did, item['schema_id'])
         schemas[received_schema_id] = json.loads(received_schema)
 
-        logger.info("\"{}\" -> Get Claim Definition from Ledger".format(actor))
+        logger.info(f'\"{actor}\" -> Get Claim Definition from Ledger')
         (received_cred_def_id, received_cred_def) = await get_cred_def(pool_handle, _did, item['cred_def_id'])
         cred_defs[received_cred_def_id] = json.loads(received_cred_def)
 
         if 'rev_reg_id' in item and item['rev_reg_id'] is not None:
             # Get Revocation Definitions and Revocation Registries
-            logger.info("\"{}\" -> Get Revocation Definition from Ledger".format(actor))
+            logger.info(f'\"{actor}\" -> Get Revocation Definition from Ledger')
             get_revoc_reg_def_request = await ledger.build_get_revoc_reg_def_request(_did, item['rev_reg_id'])
 
             get_revoc_reg_def_response = \
@@ -605,7 +604,7 @@ async def verifier_get_entities_from_ledger(pool_handle, _did, identifiers, acto
                                                       lambda response: response['result']['data'] is not None)
             (rev_reg_id, revoc_reg_def_json) = await ledger.parse_get_revoc_reg_def_response(get_revoc_reg_def_response)
 
-            logger.info("\"{}\" -> Get Revocation Registry from Ledger".format(actor))
+            logger.info(f'\"{actor}\" -> Get Revocation Registry from Ledger')
             if not timestamp: timestamp = item['timestamp']
             get_revoc_reg_request = \
                 await ledger.build_get_revoc_reg_request(_did, item['rev_reg_id'], timestamp)
@@ -620,7 +619,7 @@ async def verifier_get_entities_from_ledger(pool_handle, _did, identifiers, acto
     return json.dumps(schemas), json.dumps(cred_defs), json.dumps(rev_reg_defs), json.dumps(rev_regs)
 
 def create_user_proof_file(json_file, user_proof):
-    logger.info(f"called create_user_proof_file()")
+    logger.info("called create_user_proof_file()")
     with open(json_file, 'w') as file:
         file.write(user_proof)
     logger.info(f"Saved proof to {json_file}")
@@ -640,7 +639,7 @@ def request_discounted_cartrade(json_file):
     # logger.info(f"http_params: tradeParams: {http_req_params['tradeParams']}")
     # logger.info(f"http_params: authParams: {http_req_params['authParams']}")
 
-    logger.info(f"http_params")
+    logger.info("http_params")
 
     req_url = http_req_params["url"]
     req_header = {'Content-Type': 'application/json'}
@@ -661,11 +660,11 @@ def request_discounted_cartrade(json_file):
     # send request
     response = requests.post(req_url, headers=req_header, data=json.dumps(req_body))
     logger.info("return requests.post()")
-    logger.info("http_params: authParams: {}".format(http_req_params["authParams"]))
-    print(f"return requests.post()")
+    logger.info(f'http_params: authParams: {http_req_params["authParams"]}')
+    print("return requests.post()")
     print(f"resp: {response}")
     print(f"resp.text: {response.text}")
-    print(f"##----")
+    print("##----")
 
 if __name__ == '__main__':
     run_coroutine(run)

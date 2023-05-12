@@ -3,34 +3,28 @@ import yaml
 
 rootPath = "../"
 
-pathNodeSettings = rootPath + "etc/cactus/node-settings.yaml"
-pathNodeValidatorRegistry = rootPath + "etc/cactus/node-validator-registry.yaml"
-pathValidatorSettings = rootPath + "etc/cactus/validator-001-settings.yaml"
-pathValidatorSecrets = rootPath + "etc/cactus/validator-001-secrets.yaml"
+pathNodeSettings = f"{rootPath}etc/cactus/node-settings.yaml"
+pathNodeValidatorRegistry = (
+    f"{rootPath}etc/cactus/node-validator-registry.yaml"
+)
+pathValidatorSettings = f"{rootPath}etc/cactus/validator-001-settings.yaml"
+pathValidatorSecrets = f"{rootPath}etc/cactus/validator-001-secrets.yaml"
 
-#dataclass for validator-<DLT id>-settings.yml
-#data members should be equal to yml
 @dataclasses.dataclass
 class NodeSettings: 
     port: int
     logging_dir: str
 
-#dataclass for validator-<DLT id>-settings.yml
-#data members should be equal to yml
 @dataclasses.dataclass
 class NodeValidatorRegistry: 
     proto: str
     url: str
     publickey: str
 
-#dataclass for validator-<DLT id>-settings.yml
-#data members should be equal to yml
 @dataclasses.dataclass
 class ValidatorSettings: 
     port: int
 
-#dataclass for validator-<DLT id>-settings.yml
-#data members should be equal to yml
 @dataclasses.dataclass
 class ValidatorSecrets: 
     sign_key: str
