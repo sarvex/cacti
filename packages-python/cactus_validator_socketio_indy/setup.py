@@ -76,7 +76,7 @@ setup(
         'greenlet==1.1.0',
         'idna==3.2',
         'itsdangerous==2.0.1',
-        'Jinja2==3.0.1',
+        'Jinja2==3.1.3',
         'MarkupSafe==2.0.1',
         'pycparser==2.20',
         'PyJWT==2.1.0',
