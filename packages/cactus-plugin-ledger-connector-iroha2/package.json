@@ -55,7 +55,7 @@
     "hada": "0.0.8",
     "rxjs": "7.3.0",
     "fast-safe-stringify": "2.1.1",
-    "sanitize-html": "2.7.0",
+    "sanitize-html": "2.12.1",
     "undici": "5.10.0"
   },
   "devDependencies": {
